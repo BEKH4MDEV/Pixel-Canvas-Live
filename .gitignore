@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build output
+dist/
+build/
+*.tsbuildinfo
+
+# Env
+.env
+.env.*
+!.env.example
+
+# Ephemeral runtime data (F2+)
+data/
+uploads/
+logs/
+backups/
+
+# Editor / OS
+.DS_Store
+.vscode/
+.idea/
+*.log

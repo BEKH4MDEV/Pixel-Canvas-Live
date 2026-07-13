@@ -1,0 +1,69 @@
+// Esquema relacional de Pixel Canvas Live (documento 02). SQLite via Prisma.
+// Solo persiste configuracion, catalogos y estadisticas historicas; el lienzo y el
+// estado de la partida son efimeros y viven en memoria (GameStateService).
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Config {
+  key   String @id
+  value String
+}
+
+model Command {
+  id         Int    @id @default(autoincrement())
+  name       String @unique
+  actionType String
+}
+
+model Color {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+  hex  String
+}
+
+model Figure {
+  id      Int    @id @default(autoincrement())
+  name    String @unique
+  pattern String // matriz 2D de 0/1 serializada
+}
+
+model Gift {
+  id      Int          @id @default(autoincrement())
+  giftId  String       @unique
+  name    String
+  effects GiftEffect[]
+}
+
+model GiftEffect {
+  id         Int    @id @default(autoincrement())
+  giftId     Int
+  gift       Gift   @relation(fields: [giftId], references: [id], onDelete: Cascade)
+  position   Int    @default(0)
+  effectType String
+  params     String // JSON
+
+  @@index([giftId])
+}
+
+model PlayerStat {
+  id                 Int      @id @default(autoincrement())
+  username           String   @unique
+  pixelsTotal        Int      @default(0)
+  pixelsCurrentRound Int      @default(0)
+  lastSeenAt         DateTime @default(now())
+}
+
+model AuthAttempt {
+  id                Int       @id @default(autoincrement())
+  attemptsInGroup   Int       @default(0)
+  groupsUsed        Int       @default(0)
+  lockedUntil       DateTime?
+  permanentlyLocked Boolean   @default(false)
+}

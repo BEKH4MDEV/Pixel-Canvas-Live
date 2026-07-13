@@ -1,0 +1,27 @@
+{
+  "name": "pixel-canvas-live",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Lienzo de pixeles colaborativo controlado por el chat de un live.",
+  "packageManager": "pnpm@11.9.0",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "pnpm db:setup && pnpm -r --parallel dev",
+    "build": "pnpm --filter @pcl/contracts build && pnpm --filter @pcl/web build",
+    "start": "pnpm --filter @pcl/server start",
+    "preview": "pnpm --filter @pcl/web preview",
+    "db:setup": "pnpm --filter @pcl/server db:setup",
+    "db:seed": "pnpm --filter @pcl/server db:seed",
+    "unlock-admin": "pnpm --filter @pcl/server unlock-admin",
+    "backup": "pnpm --filter @pcl/server backup",
+    "typecheck": "pnpm -r --parallel typecheck",
+    "lint": "pnpm -r --parallel lint",
+    "format": "prettier --write \"**/*.{ts,tsx,css,json,md}\""
+  },
+  "devDependencies": {
+    "playwright-core": "^1.61.1",
+    "prettier": "^3.3.3"
+  }
+}
