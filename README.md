@@ -2,70 +2,66 @@
 
 # 🎨 Pixel Canvas Live
 
-**Lienzo de píxeles colaborativo, gobernado en directo por el chat de un live de TikTok**
+**El chat de tu live pinta. Tú diriges el show.**
 
-[![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white)](#stack)
-[![React](https://img.shields.io/badge/React-Vite-61DAFB?logo=react&logoColor=white)](#stack)
-[![Express](https://img.shields.io/badge/Express-Node%20%E2%89%A5%2020-000000?logo=express&logoColor=white)](#stack)
-[![Prisma](https://img.shields.io/badge/Prisma-SQLite-2D3748?logo=prisma&logoColor=white)](#stack)
+[![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white)](#-stack-t%C3%A9cnico)
+[![React](https://img.shields.io/badge/React-Vite-61DAFB?logo=react&logoColor=white)](#-stack-t%C3%A9cnico)
+[![Express](https://img.shields.io/badge/Express-Node%20%E2%89%A5%2020-000000?logo=express&logoColor=white)](#-stack-t%C3%A9cnico)
+[![Prisma](https://img.shields.io/badge/Prisma-SQLite-2D3748?logo=prisma&logoColor=white)](#-stack-t%C3%A9cnico)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](#-licencia)
 
 </div>
 
 ---
 
-Los espectadores **pintan** escribiendo comandos y **disparan efectos** (figuras, lluvias,
-reinicios, fin de partida…) enviando regalos. El creador comparte el lienzo en pantalla y lo
-dirige desde un panel privado: inicia y finaliza partidas, lanza acciones, y vigila estadísticas
-y una consola del sistema en vivo.
+**Pixel Canvas Live** convierte tu directo de TikTok en un lienzo colaborativo gigante. Cada
+espectador puede pintar un píxel escribiendo un comando en el chat, o desatar figuras, lluvias de
+color y reinicios enviando regalos. Tú lo proyectas en pantalla, y desde un panel privado
+controlas la partida, ves quién va ganando y qué está pasando en tiempo real.
 
-Todo el estado de juego —partida, lienzo, cooldown, comandos, figuras, lluvia, reinicio, pausa,
-finalización, conexión y reconexión— vive en el **servidor** y se empuja a los clientes por SSE
-en tiempo real. La plataforma de live está detrás de un **puerto** aislado: el motor no depende
-de TikTok, sino de una interfaz. En producción se usa el adaptador real de TikTok; una
-**audiencia simulada** puede convivir con él mediante un toggle que **inyecta eventos** como si
-vinieran del live real (solo mientras la partida está en directo y conectada), para dar vida al
-lienzo sin depender del chat real.
+Pensado para creadores que quieren una dinámica nueva de interacción: algo visual, adictivo y
+fácil de seguir tanto para quien lo mira como para quien lo juega.
+
+<p align="center">
+  <em>¿No tienes audiencia todavía o quieres probarlo antes del directo?</em><br/>
+  Actívalo con un clic y una <strong>audiencia simulada</strong> pinta y manda regalos por ti,
+  para que veas el lienzo cobrar vida antes de salir en vivo.
+</p>
 
 ---
 
-## 📺 Las dos caras
+## 📺 Las dos pantallas
 
-| | Ruta | Descripción |
+| | Para... | Qué ves |
 |---|---|---|
-| 🖼️ | **[`/canvas`](#-las-dos-caras)** | Pantalla pública que el creador captura en su transmisión. Ocupa el 100 % del viewport: lienzo blanco de pixel-art, overlay de notificaciones y superposiciones de estado (cargando, cuenta atrás, conectando al live, reconexión, pausa, resultados). Las coordenadas viven en un margen propio — los píxeles nunca se dibujan sobre los números. Parámetros de URL para adaptarla a la escena: `?overlay=false`, `grid`, `coords`, `sound`. |
-| 🔐 | **[`/admin`](#-las-dos-caras)** | Consola privada protegida por PIN. Controla la partida (iniciar, pausar, reanudar, finalizar, reconectar), configura lienzo, comandos, colores, figuras, sonidos y los efectos de cada regalo, lanza acciones manuales (herramientas), y vigila estadísticas y una consola del sistema en vivo, con un monitor del lienzo siempre visible. |
+| 🖼️ **Lienzo** | tu audiencia, en la transmisión | El lienzo a pantalla completa, listo para capturar: cuenta atrás, notificaciones de lo que se está pintando, y una pantalla de resultados cuando termina la partida. |
+| 🔐 **Panel** | ti, el creador, en privado | Inicia y controla la partida, ajusta comandos/colores/figuras, configura qué hace cada regalo, y sigue las estadísticas en vivo, todo protegido con PIN. |
 
 ---
 
-## ✨ Características principales
+## ✨ Por qué mola
 
-- **⚡ Tiempo real por SSE, separado por cara.** El servidor mantiene **dos flujos SSE
-  independientes**: uno para el lienzo (pintado y superposiciones) y otro para el panel (estado
-  de partida, top de la ronda y consola). Cada cara recibe solo lo que necesita.
-- **🔄 Estado consistente entre pestañas.** Cualquier `/canvas` que se abra —o que vuelva del
-  segundo plano— re-pide el estado completo (`GET /api/canvas/state`) y reconstruye el momento
-  exacto (incluido el segundo de la cuenta atrás o la subfase de resultados), sin animación de
-  entrada.
-- **🎮 Motor de juego autoritativo.** Un único `GameEngine` gobierna la partida: cuenta atrás,
-  conexión, cooldown por usuario, comandos, figuras, lluvia, reinicio, pausa, duración,
-  reconexión y fin.
-- **🖌️ Render del lienzo fuera de React.** Una clase imperativa con `requestAnimationFrame`
-  soporta múltiples animaciones simultáneas (figuras revelándose en espiral, lluvias cayendo,
-  pops por píxel, borrado del reinicio).
-- **🔌 Puerto de plataforma + convivencia real/simulada.** El dominio depende de la interfaz
-  `LivePlatform`. `TikTokLivePlatform` es el adaptador real; `MockLivePlatform` es una audiencia
-  simulada; `CombinedLivePlatform` los une para que convivan (ver [Simulador](#-audiencia-simulada)).
-- **📋 Consola del sistema en el servidor.** Cada acción, evento del live y error se registra en
-  un buffer en memoria del servidor y se empuja al panel; ningún error queda sin mostrar.
-- **🔒 Autenticación real.** Acceso por PIN (bcrypt) con sesión httpOnly firmada, bloqueo por
-  fuerza bruta y expiración configurable. La sesión solo afecta al panel, nunca al lienzo.
-- **📐 Contratos Zod compartidos.** Cada payload que cruza la red se declara una vez; cliente y
-  servidor derivan el tipo y no pueden desincronizarse.
+- **🎨 Pinta el chat, no tú.** Cada mensaje puede convertirse en un píxel en el lienzo, la
+  audiencia construye el arte, no lo ven pasivamente.
+- **🎁 Los regalos hacen ruido de verdad.** Configura qué efecto dispara cada regalo: figuras
+  que se revelan en espiral, lluvias de color, reinicios sorpresa o el fin de la partida.
+- **⚡ Todo en directo, sin lag perceptible.** El lienzo se actualiza al instante para todos los
+  que lo estén viendo, sin recargar ni perder el hilo si alguien cambia de pestaña.
+- **🕹️ Tú tienes el mando.** Pausa, reanuda, reconecta o finaliza la partida cuando quieras desde
+  el panel, sin que la audiencia note fricción.
+- **🎭 Pruébalo sin audiencia.** El modo de audiencia simulada te deja ensayar la dinámica antes
+  de salir en vivo, o simplemente mantener el lienzo activo entre rachas de espectadores.
+- **🔒 Solo tú controlas el panel.** Acceso protegido por PIN, con bloqueo automático si alguien
+  intenta adivinarlo.
+- **🔊 Personalízalo a tu estilo.** Sonidos propios para cada evento, colores y figuras a tu
+  gusto, y un prefijo de comando que tú eliges.
 
 ---
 
-## 🏗️ Arquitectura
+## 🛠️ Por dentro
+
+> A partir de aquí, la parte técnica, por si te interesa cómo está construido o quieres
+> contribuir.
 
 Monorepo **pnpm** con una frontera de tipos única y capas con dependencias en un solo sentido.
 
@@ -112,7 +108,7 @@ GameEngine  ──emite──►  canvasBus ──► SSE /api/canvas/events ─
 
 ---
 
-## 🧰 Stack
+## 🧰 Stack técnico
 
 <div align="center">
 
@@ -226,8 +222,8 @@ motor como una sola plataforma. La **conexión es siempre la del live real**: el
 altera nada** del comportamiento original (conexión, reconexión, pausa, cuenta atrás, fin…). El
 toggle **Audiencia simulada** (Estado y control) solo decide si se inyectan eventos simulados:
 
-- **OFF** — solo el live real (comportamiento por defecto).
-- **ON** — además del live real, el simulador **inyecta eventos** por el mismo pipeline, como si
+- **OFF**, solo el live real (comportamiento por defecto).
+- **ON**, además del live real, el simulador **inyecta eventos** por el mismo pipeline, como si
   vinieran del chat real. Solo los inyecta cuando la partida está en directo, conectada al live
   real y el lienzo visible esperando eventos (nada durante pausa, reconexión o cuenta atrás); si
   el live real no está conectado, no se inyecta nada.
