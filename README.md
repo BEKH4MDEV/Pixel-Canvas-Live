@@ -17,7 +17,8 @@
 **Pixel Canvas Live** convierte tu directo de TikTok en un lienzo colaborativo gigante. Cada
 espectador puede pintar un píxel escribiendo un comando en el chat, o desatar figuras, lluvias de
 color y reinicios enviando regalos. Tú lo proyectas en pantalla, y desde un panel privado
-controlas la partida, ves quién va ganando y qué está pasando en tiempo real.
+controlas la partida, ves quién va ganando y qué está pasando en tiempo real — todo sin tocar
+código mientras estás en directo.
 
 Pensado para creadores que quieren una dinámica nueva de interacción: algo visual, adictivo y
 fácil de seguir tanto para quien lo mira como para quien lo juega.
@@ -35,13 +36,28 @@ fácil de seguir tanto para quien lo mira como para quien lo juega.
 | | Para... | Qué ves |
 |---|---|---|
 | 🖼️ **Lienzo** | tu audiencia, en la transmisión | El lienzo a pantalla completa, listo para capturar: cuenta atrás, notificaciones de lo que se está pintando, y una pantalla de resultados cuando termina la partida. |
-| 🔐 **Panel** | ti, el creador, en privado | Inicia y controla la partida, ajusta comandos/colores/figuras, configura qué hace cada regalo, y sigue las estadísticas en vivo, todo protegido con PIN. |
+| 🔐 **Panel** | ti, el creador, en privado | Inicia y controla la partida, ajusta comandos/colores/figuras, configura qué hace cada regalo, y sigue las estadísticas en vivo — todo protegido con PIN. |
+
+<table>
+  <tr>
+    <td align="center" width="50%">
+      <img src="./screenshots/Lienzo.png" alt="Pantalla del lienzo en directo" width="100%" />
+      <br/>
+      <sub><strong>Lienzo</strong> — lo que ve tu audiencia</sub>
+    </td>
+    <td align="center" width="50%">
+      <img src="./screenshots/Admin.png" alt="Panel de administración" width="100%" />
+      <br/>
+      <sub><strong>Panel</strong> — lo que ves tú</sub>
+    </td>
+  </tr>
+</table>
 
 ---
 
 ## ✨ Por qué mola
 
-- **🎨 Pinta el chat, no tú.** Cada mensaje puede convertirse en un píxel en el lienzo, la
+- **🎨 Pinta el chat, no tú.** Cada mensaje puede convertirse en un píxel en el lienzo — la
   audiencia construye el arte, no lo ven pasivamente.
 - **🎁 Los regalos hacen ruido de verdad.** Configura qué efecto dispara cada regalo: figuras
   que se revelan en espiral, lluvias de color, reinicios sorpresa o el fin de la partida.
@@ -60,7 +76,7 @@ fácil de seguir tanto para quien lo mira como para quien lo juega.
 
 ## 🛠️ Por dentro
 
-> A partir de aquí, la parte técnica, por si te interesa cómo está construido o quieres
+> A partir de aquí, la parte técnica — por si te interesa cómo está construido o quieres
 > contribuir.
 
 Monorepo **pnpm** con una frontera de tipos única y capas con dependencias en un solo sentido.
@@ -222,8 +238,8 @@ motor como una sola plataforma. La **conexión es siempre la del live real**: el
 altera nada** del comportamiento original (conexión, reconexión, pausa, cuenta atrás, fin…). El
 toggle **Audiencia simulada** (Estado y control) solo decide si se inyectan eventos simulados:
 
-- **OFF**, solo el live real (comportamiento por defecto).
-- **ON**, además del live real, el simulador **inyecta eventos** por el mismo pipeline, como si
+- **OFF** — solo el live real (comportamiento por defecto).
+- **ON** — además del live real, el simulador **inyecta eventos** por el mismo pipeline, como si
   vinieran del chat real. Solo los inyecta cuando la partida está en directo, conectada al live
   real y el lienzo visible esperando eventos (nada durante pausa, reconexión o cuenta atrás); si
   el live real no está conectado, no se inyecta nada.
